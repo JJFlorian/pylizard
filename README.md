@@ -10,7 +10,7 @@ The package is installed with:
     $ pip install pylizard
 
 
-
+<!-- 
 ## Development installation of this project itself
 
 We use python's build-in "virtualenv" to get a nice isolated
@@ -72,4 +72,4 @@ If you need a new dependency (like `requests`), add it in
 
 - Update this readme.
 
-- Remove this section as you've done it all :-)
+- Remove this section as you've done it all :-) -->
