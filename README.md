@@ -1,6 +1,6 @@
 # pylizard
 
-This package is made to speed up the process of building scripts which interact with the Lizard v4 API.
+This package is made to speed up the process of building scripts which interact with the Lizard v4 API. The package is open source, so feel free to contribute.
 
 
 ## Installation
