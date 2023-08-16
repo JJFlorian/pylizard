@@ -1,6 +1,8 @@
 import requests
 import json
 import pandas as pd
+from .config import *
+from .utils import *
 
 """
 NOTE: compatible with API v4 only. Import as from pylizard import pylizard as liz
@@ -17,7 +19,6 @@ TODO:
     - timeseries
 """
 
-LIZARD_BASE_URL = "https://demo.lizard.net/api/v4"
 
 def get_headers(api_key):
     """
@@ -95,7 +96,11 @@ class Organisation:
         count_dict = {}
 
         for endpoint in endpoint_list:
-            url = f"{LIZARD_BASE_URL}/{endpoint}/?organisation__uuid={self.uuid}"
+            if endpoint == 'timeseries':
+                url = f"{LIZARD_BASE_URL}/{endpoint}/?location__organisation__uuid={self.uuid}"
+            else:
+                url = f"{LIZARD_BASE_URL}/{endpoint}/?organisation__uuid={self.uuid}"
+            
             r = requests.get(url=url, headers=self.headers)
             count = r.json()["count"]
 
@@ -103,16 +108,90 @@ class Organisation:
 
         return count_dict
 
+    def get_monitoringnetworks(self, dataformat='list'):
+        """
+        Get all the monitoringngetworks related to the organisation.
 
-    #TODO:
-        # - get_monitoringnetworks
-        # - get_organisation
-        # - get_groundwaterstations
-        # - get_pumpstations
-        # - get_measuringstations
-        # - get_locations
-        # - get_timeseries
+        args:
+            - dataformat: 'list' for list of uuids, 'df' for df of all data
 
+        returns:
+            - list of monitoringnetwork uuids
+        """
+        results = get_organisation_endpoint_assets(endpoint='monitoringnetworks', dataformat=dataformat, organisation_uuid=self.uuid, json_field='uuid', headers=self.headers)
+        
+        return results
+
+    def get_groundwaterstations(self, dataformat='list'):
+        """
+        Get all the groundwaterstations related to the organisation.
+
+        args:
+            - dataformat: 'list' for list of ids, 'df' for df of all data
+
+        returns:
+            - list of groundwaterstations ids
+        """
+        results = get_organisation_endpoint_assets(endpoint='groundwaterstations', dataformat=dataformat, organisation_uuid=self.uuid, json_field='id', headers=self.headers)
+        
+        return results
+  
+    def get_pumpstations(self, dataformat='list'):
+        """
+        Get all the pumpstations related to the organisation.
+
+        args:
+            - dataformat: 'list' for list of ids, 'df' for df of all data
+
+        returns:
+            - list of pumpstations ids
+        """
+        results = get_organisation_endpoint_assets(endpoint='pumpstations', dataformat=dataformat, organisation_uuid=self.uuid, json_field='id', headers=self.headers)
+        
+        return results
+    
+    def get_measuringstations(self, dataformat='list'):
+        """
+        Get all the measuringstations related to the organisation.
+
+        args:
+            - dataformat: 'list' for list of ids, 'df' for df of all data
+
+        returns:
+            - list of measuringstations uuids
+        """
+        results = get_organisation_endpoint_assets(endpoint='measuringstations', dataformat=dataformat, organisation_uuid=self.uuid, json_field='id', headers=self.headers)
+        
+        return results
+
+    def get_locations(self, dataformat='list'):
+        """
+        Get all the locations related to the organisation.
+
+        args:
+            - dataformat: 'list' for list of uuids, 'df' for df of all data
+
+        returns:
+            - list of locations uuids
+        """
+        results = get_organisation_endpoint_assets(endpoint='locations', dataformat=dataformat, organisation_uuid=self.uuid, json_field='uuid', headers=self.headers)
+        
+        return results
+
+    def get_timeseries(self, dataformat='list'):
+        """
+        Get all the timeseries related to the organisation.
+
+        args:
+            - dataformat: 'list' for list of uuids, 'df' for df of all data
+
+        returns:
+            - list of timeseries uuids
+        """
+        results = get_organisation_endpoint_assets(endpoint='timeseries', dataformat=dataformat, organisation_uuid=self.uuid, json_field='uuid', headers=self.headers)
+        
+        return results
+    
 
 class Monitoringnetwork:
     """
