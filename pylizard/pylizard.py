@@ -6,7 +6,6 @@ from .utils import *
 
 """
 TODO: 
-    - groundwaterstations
     - pumpstations
     - measuringstations
     - locations
@@ -64,7 +63,7 @@ class Organisation:
             r = requests.get(self.url, headers=self.headers)
 
             if r.status_code != 200:
-                raise TypeError("No organisatino found for provided uuid")
+                raise TypeError("No organisation found for provided uuid")
             else:
                 self.name = r.json()["name"]
         if uuid == None:
@@ -111,7 +110,6 @@ class Organisation:
                 url = f"{LIZARD_BASE_URL}/{endpoint}/?location__organisation__uuid={self.uuid}"
             else:
                 url = f"{LIZARD_BASE_URL}/{endpoint}/?organisation__uuid={self.uuid}"
-
             r = requests.get(url=url, headers=self.headers)
             count = r.json()["count"]
 
@@ -119,24 +117,25 @@ class Organisation:
 
         return count_dict
 
-    def get_monitoringnetworks(self, dataformat: str = "list"):
+    def get_monitoringnetworks(self, return_format: str = "list"):
         """
         Get all the monitoringngetworks related to the organisation.
 
         Parameters:
         ----------
-        dataformat: str
+        return_format: str
             options:
                 -'list' (default): returns list of uuids
 
                 -'df': returns df of all data
 
-        returns:
+        Returns:
+        --------
             list or df
         """
         results = get_organisation_endpoint_assets(
             endpoint="monitoringnetworks",
-            dataformat=dataformat,
+            return_format=return_format,
             organisation_uuid=self.uuid,
             json_field="uuid",
             headers=self.headers,
@@ -144,24 +143,25 @@ class Organisation:
 
         return results
 
-    def get_groundwaterstations(self, dataformat: str = "list"):
+    def get_groundwaterstations(self, return_format: str = "list"):
         """
         Get all the groundwaterstations related to the organisation.
 
         Parameters:
         ----------
-        dataformat: str
+        return_format: str
             options:
                 -'list' (default): returns list of ids
 
                 -'df': returns df of all data
 
-        returns:
+        Returns:
+        -------
             list or df
         """
         results = get_organisation_endpoint_assets(
             endpoint="groundwaterstations",
-            dataformat=dataformat,
+            return_format=return_format,
             organisation_uuid=self.uuid,
             json_field="id",
             headers=self.headers,
@@ -169,24 +169,25 @@ class Organisation:
 
         return results
 
-    def get_pumpstations(self, dataformat: str = "list"):
+    def get_pumpstations(self, return_format: str = "list"):
         """
         Get all the pumpstations related to the organisation.
 
         Parameters:
         ----------
-        dataformat: str
+        return_format: str
             options:
                 -'list' (default): returns list of ids
 
                 -'df': returns df of all data
 
-        returns:
+        Returns:
+        -------
             list or df
         """
         results = get_organisation_endpoint_assets(
             endpoint="pumpstations",
-            dataformat=dataformat,
+            return_format=return_format,
             organisation_uuid=self.uuid,
             json_field="id",
             headers=self.headers,
@@ -194,24 +195,25 @@ class Organisation:
 
         return results
 
-    def get_measuringstations(self, dataformat: str = "list"):
+    def get_measuringstations(self, return_format: str = "list"):
         """
         Get all the measuringstations related to the organisation.
 
         Parameters:
         ----------
-        dataformat: str
+        return_format: str
             options:
                 -'list' (default): returns list of ids
 
                 -'df': returns df of all data
 
-        returns:
+        Returns:
+        -------
             list or df
         """
         results = get_organisation_endpoint_assets(
             endpoint="measuringstations",
-            dataformat=dataformat,
+            return_format=return_format,
             organisation_uuid=self.uuid,
             json_field="id",
             headers=self.headers,
@@ -219,24 +221,25 @@ class Organisation:
 
         return results
 
-    def get_locations(self, dataformat: str = "list"):
+    def get_locations(self, return_format: str = "list"):
         """
         Get all the locations related to the organisation.
 
         Parameters:
         ----------
-        dataformat: str
+        return_format: str
             options:
                 -'list' (default): returns list of uuids
 
                 -'df': returns df of all data
 
-        returns:
+        Returns:
+        -------
             list or df
         """
         results = get_organisation_endpoint_assets(
             endpoint="locations",
-            dataformat=dataformat,
+            return_format=return_format,
             organisation_uuid=self.uuid,
             json_field="uuid",
             headers=self.headers,
@@ -244,24 +247,25 @@ class Organisation:
 
         return results
 
-    def get_timeseries(self, dataformat: str = "list"):
+    def get_timeseries(self, return_format: str = "list"):
         """
         Get all the timeseries related to the organisation.
 
         Parameters:
         ----------
-        dataformat: str
+        return_format: str
             options:
                 -'list' (default): returns list of uuids
 
                 -'df': returns df of all data
 
-        returns:
+        Returns:
+        -------
             list or df
         """
         results = get_organisation_endpoint_assets(
             endpoint="timeseries",
-            dataformat=dataformat,
+            return_format=return_format,
             organisation_uuid=self.uuid,
             json_field="uuid",
             headers=self.headers,
@@ -274,11 +278,6 @@ class Monitoringnetwork:
     """
     Class for working with monitoringnetworks.
     Initialization requires either name or uuid.
-
-    args:
-        -headers: Lizard headers. Can be generated by get_headers('API_KEY')
-        -name
-        -uuid
 
     Parameters:
     -----------
@@ -338,50 +337,52 @@ class Monitoringnetwork:
 
         return count_dict
 
-    def get_locations(self, dataformat: str = "list"):
+    def get_locations(self, return_format: str = "list"):
         """
         Returns the locations related to the monitoringnetwork in a uuid list or df format
         
         Parameters:
         ----------
-        dataformat: str
+        return_format: str
             options:
                 -'list' (default): returns list of uuids
 
                 -'df': returns df of all data
 
-        returns:
+        Returns:
+        -------
             list or df
         
         """
         results = get_monitoringnetwork_enpoint_assets(
             endpoint="locations",
-            dataformat=dataformat,
+            return_format=return_format,
             url=self.url,
             headers=self.headers,
         )
 
         return results
 
-    def get_timeseries(self, dataformat: str = "list"):
+    def get_timeseries(self, return_format: str = "list"):
         """
         Returns the timeseries related to the monitoringnetwork in a uuid list or df format
         
         Parameters:
         ----------
-        dataformat: str
+        return_format: str
             options:
                 -'list' (default): returns list of uuids
 
                 -'df': returns df of all data
 
-        returns:
+        Returns:
+        -------
             list or df
         """
         
         results = get_monitoringnetwork_enpoint_assets(
             endpoint="timeseries",
-            dataformat=dataformat,
+            return_format=return_format,
             url=self.url,
             headers=self.headers,
         )
@@ -432,20 +433,123 @@ class Monitoringnetwork:
             r.raise_for_status()
 
 
-# class Groundwaterstations:
-#     """
-#     Class for working with monitoringnetworks.
-#     Initialization requires either uuid or organisation uuid.
-#     If uuid is given, the class handles the provided groundwaterstation.
-#     When the organisation uuid is provided, all the groundwaterstations under the organisation are used.
+class Groundwaterstations:
+    """
+    Class for working with groundwaterstations.
+    Initialization requires groundwaterstation id if the groundwaterstation exists.
+    If the groundwaterstation has yet to be created, the post_params should be provided
 
 
-#     args:
-#         -headers: Lizard headers. Can be generated by get_headers('API_KEY')
-#         -name
-#         -uuid
-#     """
+    Parameters:
+    -----------
+    headers : dict
+        Lizard headers. Can be generated by get_headers function
+    id : int
+        The groundwaterstation id. This should be provided if the groundwaterstation exists allready.
+    post_params : dict
+        The parameters that are required to create a new groundwaterstation.
+        These are:
+            organisation, geometry, name, code 
+        If a new groundwaterstation is created, the id is saved on the self.id
 
-#     def __init__(self, headers=None, uuid=None):
-#         self.headers = headers
-#         self.uuid = uuid
+    """
+
+    def __init__(self, headers: dict = None, id: int = None, post_params: dict = None):
+        self.headers = headers
+
+        if id != None:
+            self.id = id
+            self.url = f"{LIZARD_BASE_URL}/groundwaterstations/{self.id}"
+        elif id != None and post_params != None:
+            raise TypeError("Please provide either id or post_params. Not both.")
+        elif id == None and post_params != None:
+            url = f"{LIZARD_BASE_URL}/groundwaterstations/"
+            r = requests.post(url=url, headers=self.headers, data=json.dumps(post_params))
+            if r.status_code == 400:
+                raise KeyError(r.json())
+            elif r.status_code == 201:
+                self.id = r.json()['id']
+                self.url = f"{LIZARD_BASE_URL}/groundwaterstations/{self.id}"
+                print(f"Groundwaterstation successfully created with id {self.id}")
+    
+    def get_groundwaterstation_data(self):
+        """
+        Get the data of the groundwaterstation.
+
+        Returns
+        ------
+        dictionary : a json field of the data related to the groundwaterstation.
+
+        """
+        r = requests.get(url=self.url, headers=self.headers)
+        results = r.json()
+
+        return results
+    
+    def update_groundwaterstation_data(self, patch_params: dict = None):
+        """
+        Method to update an existing groundwaterstation
+
+        !!!!NOTE!!!!: Currently, the update doesn't seem to work for groundwaterstations on the Lizard side.
+
+        Parameters
+        ----------
+        patch_params : dict
+            a dict of the parameters that should be updated.
+        """
+        r = requests.patch(url=self.url, headers=self.headers, data=json.dumps(patch_params))
+        print(r.json())
+        if r.status_code == 200:
+            print(f"Groundwaterstation {self.id} successfully updated")
+        else:
+            raise KeyError(r.json())
+
+
+    def delete_groundwaterstation(self):
+        """
+        Deletes the groundwaterstation.
+        """
+        r = requests.delete(url=self.url, headers=self.headers)
+        if r.status_code == 204:
+            print(f"Groundwaterstation {self.id} successfully deleted")
+        elif r.status_code == 404:
+            raise KeyError(r.json())
+        
+    def get_related_location(self, return_format: str = 'uuid'):
+        """
+        This method searches the location related to the groundwaterstation
+
+        Parameters:
+        -----------
+        return_format : str
+            options: 
+                - 'uuid' (default): only returns the uuid of the location
+
+                - 'json': returns the full data in json format of the found location
+
+
+        Returns:
+        --------
+        string (when return_format = 'uuid')
+        
+        json (when return_format = 'json')
+        """
+        url = f"{LIZARD_BASE_URL}/locations/?object__id={self.id}&object__type=groundwaterstation"
+        r = requests.get(url=url, headers=self.headers)
+        count = r.json()['count']
+
+        if count == 0:
+            print(f"No locations found for groundwaterstation id {self.id}")
+            return
+        elif count > 1:
+            print("Unexpected result: More than 1 locations are found. If that is possible, this code should be updated")
+            return
+        elif count == 1:
+            if return_format == 'uuid':
+                uuid = r.json()['results'][0]['uuid']
+                return uuid
+            if return_format == 'json':
+                location_json = r.json()['results'][0]
+                return location_json
+            
+    
