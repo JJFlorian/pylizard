@@ -21,12 +21,13 @@ def get_headers(api_key):
         - api key
     """
     headers = {
-            "username": "__key__",
-            "password": api_key,
-            "Content-Type": "application/json",
-        }
+        "username": "__key__",
+        "password": api_key,
+        "Content-Type": "application/json",
+    }
 
     return headers
+
 
 class Organisation:
     """
@@ -44,12 +45,12 @@ class Organisation:
 
     def __init__(self, headers=None, name=None, uuid=None):
         self.headers = headers
-        
+
         if name == None:
             self.uuid = uuid
             self.url = f"{LIZARD_BASE_URL}/organisations/{self.uuid}"
             r = requests.get(self.url, headers=self.headers)
-            
+
             if r.status_code != 200:
                 raise TypeError("No organisatino found for provided uuid")
             else:
@@ -58,7 +59,7 @@ class Organisation:
             self.name = name
             url = f"{LIZARD_BASE_URL}/organisations/?name={self.name}"
             print(url)
-            r = requests.get(url, headers=self.headers)         
+            r = requests.get(url, headers=self.headers)
             count = r.json()["count"]
 
             if count == 0:
@@ -66,35 +67,35 @@ class Organisation:
             else:
                 self.uuid = r.json()["results"][0]["uuid"]
                 self.url = f"{LIZARD_BASE_URL}/organisations/{self.uuid}"
- 
+
     def get_stats(self):
         """
         Returns the amount of assets for the organisation.
         """
         endpoint_list = [
-            'filters',
-            'groundwaterstations',
-            'locations',
-            'manholes',
-            'measuringstations',
-            'monitoringnetworks',
-            'pumpstations',
-            'rasters',
-            'rastersources',
-            'scenarios',
-            'timeseries',
-            'weirs',
-            'wmslayers',
+            "filters",
+            "groundwaterstations",
+            "locations",
+            "manholes",
+            "measuringstations",
+            "monitoringnetworks",
+            "pumpstations",
+            "rasters",
+            "rastersources",
+            "scenarios",
+            "timeseries",
+            "weirs",
+            "wmslayers",
         ]
 
         count_dict = {}
 
         for endpoint in endpoint_list:
-            if endpoint == 'timeseries':
+            if endpoint == "timeseries":
                 url = f"{LIZARD_BASE_URL}/{endpoint}/?location__organisation__uuid={self.uuid}"
             else:
                 url = f"{LIZARD_BASE_URL}/{endpoint}/?organisation__uuid={self.uuid}"
-            
+
             r = requests.get(url=url, headers=self.headers)
             count = r.json()["count"]
 
@@ -102,7 +103,7 @@ class Organisation:
 
         return count_dict
 
-    def get_monitoringnetworks(self, dataformat='list'):
+    def get_monitoringnetworks(self, dataformat="list"):
         """
         Get all the monitoringngetworks related to the organisation.
 
@@ -112,11 +113,17 @@ class Organisation:
         returns:
             - list of monitoringnetwork uuids
         """
-        results = get_organisation_endpoint_assets(endpoint='monitoringnetworks', dataformat=dataformat, organisation_uuid=self.uuid, json_field='uuid', headers=self.headers)
-        
+        results = get_organisation_endpoint_assets(
+            endpoint="monitoringnetworks",
+            dataformat=dataformat,
+            organisation_uuid=self.uuid,
+            json_field="uuid",
+            headers=self.headers,
+        )
+
         return results
 
-    def get_groundwaterstations(self, dataformat='list'):
+    def get_groundwaterstations(self, dataformat="list"):
         """
         Get all the groundwaterstations related to the organisation.
 
@@ -126,11 +133,17 @@ class Organisation:
         returns:
             - list of groundwaterstations ids
         """
-        results = get_organisation_endpoint_assets(endpoint='groundwaterstations', dataformat=dataformat, organisation_uuid=self.uuid, json_field='id', headers=self.headers)
-        
+        results = get_organisation_endpoint_assets(
+            endpoint="groundwaterstations",
+            dataformat=dataformat,
+            organisation_uuid=self.uuid,
+            json_field="id",
+            headers=self.headers,
+        )
+
         return results
-  
-    def get_pumpstations(self, dataformat='list'):
+
+    def get_pumpstations(self, dataformat="list"):
         """
         Get all the pumpstations related to the organisation.
 
@@ -140,11 +153,17 @@ class Organisation:
         returns:
             - list of pumpstations ids
         """
-        results = get_organisation_endpoint_assets(endpoint='pumpstations', dataformat=dataformat, organisation_uuid=self.uuid, json_field='id', headers=self.headers)
-        
+        results = get_organisation_endpoint_assets(
+            endpoint="pumpstations",
+            dataformat=dataformat,
+            organisation_uuid=self.uuid,
+            json_field="id",
+            headers=self.headers,
+        )
+
         return results
-    
-    def get_measuringstations(self, dataformat='list'):
+
+    def get_measuringstations(self, dataformat="list"):
         """
         Get all the measuringstations related to the organisation.
 
@@ -154,11 +173,17 @@ class Organisation:
         returns:
             - list of measuringstations uuids
         """
-        results = get_organisation_endpoint_assets(endpoint='measuringstations', dataformat=dataformat, organisation_uuid=self.uuid, json_field='id', headers=self.headers)
-        
+        results = get_organisation_endpoint_assets(
+            endpoint="measuringstations",
+            dataformat=dataformat,
+            organisation_uuid=self.uuid,
+            json_field="id",
+            headers=self.headers,
+        )
+
         return results
 
-    def get_locations(self, dataformat='list'):
+    def get_locations(self, dataformat="list"):
         """
         Get all the locations related to the organisation.
 
@@ -168,11 +193,17 @@ class Organisation:
         returns:
             - list of locations uuids
         """
-        results = get_organisation_endpoint_assets(endpoint='locations', dataformat=dataformat, organisation_uuid=self.uuid, json_field='uuid', headers=self.headers)
-        
+        results = get_organisation_endpoint_assets(
+            endpoint="locations",
+            dataformat=dataformat,
+            organisation_uuid=self.uuid,
+            json_field="uuid",
+            headers=self.headers,
+        )
+
         return results
 
-    def get_timeseries(self, dataformat='list'):
+    def get_timeseries(self, dataformat="list"):
         """
         Get all the timeseries related to the organisation.
 
@@ -182,16 +213,22 @@ class Organisation:
         returns:
             - list of timeseries uuids
         """
-        results = get_organisation_endpoint_assets(endpoint='timeseries', dataformat=dataformat, organisation_uuid=self.uuid, json_field='uuid', headers=self.headers)
-        
+        results = get_organisation_endpoint_assets(
+            endpoint="timeseries",
+            dataformat=dataformat,
+            organisation_uuid=self.uuid,
+            json_field="uuid",
+            headers=self.headers,
+        )
+
         return results
-    
+
 
 class Monitoringnetwork:
     """
     Class for working with monitoringnetworks.
     Initialization requires either name or uuid.
-    
+
     args:
         -headers: Lizard headers. Can be generated by get_headers('API_KEY')
         -name
@@ -230,7 +267,7 @@ class Monitoringnetwork:
         Returns the amount of locations, observation_types, and timeseries.
 
         """
-        endpoint_list = ['locations','observationtypes','timeseries']
+        endpoint_list = ["locations", "observationtypes", "timeseries"]
         count_dict = {}
 
         for endpoint in endpoint_list:
@@ -252,7 +289,12 @@ class Monitoringnetwork:
             - list of uuids ('list')
             - DataFrame of all data ('df')
         """
-        results = get_monitoringnetwork_enpoint_assets(endpoint='locations', dataformat=dataformat, url=self.url, headers=self.headers)
+        results = get_monitoringnetwork_enpoint_assets(
+            endpoint="locations",
+            dataformat=dataformat,
+            url=self.url,
+            headers=self.headers,
+        )
 
         return results
 
@@ -266,7 +308,12 @@ class Monitoringnetwork:
             - list of uuids ('list')
             - DataFrame of all data ('df')
         """
-        results = get_monitoringnetwork_enpoint_assets(endpoint='timeseries', dataformat=dataformat, url=self.url, headers=self.headers)
+        results = get_monitoringnetwork_enpoint_assets(
+            endpoint="timeseries",
+            dataformat=dataformat,
+            url=self.url,
+            headers=self.headers,
+        )
 
         return results
 
@@ -308,6 +355,7 @@ class Monitoringnetwork:
             )
             r.raise_for_status()
 
+
 # class Groundwaterstations:
 #     """
 #     Class for working with monitoringnetworks.
@@ -315,7 +363,7 @@ class Monitoringnetwork:
 #     If uuid is given, the class handles the provided groundwaterstation.
 #     When the organisation uuid is provided, all the groundwaterstations under the organisation are used.
 
-    
+
 #     args:
 #         -headers: Lizard headers. Can be generated by get_headers('API_KEY')
 #         -name
