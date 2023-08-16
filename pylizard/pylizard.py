@@ -55,7 +55,7 @@ class Organisation:
         Optional. If not provided, organisation_name is required
     """
 
-    def __init__(self, headers=None, name=None, uuid=None):
+    def __init__(self, headers: dict = None, name: str = None, uuid: str = None):
         self.headers = headers
 
         if name == None:
@@ -119,7 +119,7 @@ class Organisation:
 
         return count_dict
 
-    def get_monitoringnetworks(self, dataformat="list"):
+    def get_monitoringnetworks(self, dataformat: str = "list"):
         """
         Get all the monitoringngetworks related to the organisation.
 
@@ -144,7 +144,7 @@ class Organisation:
 
         return results
 
-    def get_groundwaterstations(self, dataformat="list"):
+    def get_groundwaterstations(self, dataformat: str = "list"):
         """
         Get all the groundwaterstations related to the organisation.
 
@@ -169,7 +169,7 @@ class Organisation:
 
         return results
 
-    def get_pumpstations(self, dataformat="list"):
+    def get_pumpstations(self, dataformat: str = "list"):
         """
         Get all the pumpstations related to the organisation.
 
@@ -194,7 +194,7 @@ class Organisation:
 
         return results
 
-    def get_measuringstations(self, dataformat="list"):
+    def get_measuringstations(self, dataformat: str = "list"):
         """
         Get all the measuringstations related to the organisation.
 
@@ -219,7 +219,7 @@ class Organisation:
 
         return results
 
-    def get_locations(self, dataformat="list"):
+    def get_locations(self, dataformat: str = "list"):
         """
         Get all the locations related to the organisation.
 
@@ -244,7 +244,7 @@ class Organisation:
 
         return results
 
-    def get_timeseries(self, dataformat="list"):
+    def get_timeseries(self, dataformat: str = "list"):
         """
         Get all the timeseries related to the organisation.
 
@@ -290,7 +290,7 @@ class Monitoringnetwork:
         Optional. If not provided, name is required
     """
 
-    def __init__(self, headers=None, name=None, uuid=None):
+    def __init__(self, headers: dict = None, name: str = None, uuid: str = None):
         self.headers = headers
 
         if uuid == None:
@@ -338,7 +338,7 @@ class Monitoringnetwork:
 
         return count_dict
 
-    def get_locations(self, dataformat="list"):
+    def get_locations(self, dataformat: str = "list"):
         """
         Returns the locations related to the monitoringnetwork in a uuid list or df format
         
@@ -363,7 +363,7 @@ class Monitoringnetwork:
 
         return results
 
-    def get_timeseries(self, dataformat="list"):
+    def get_timeseries(self, dataformat: str = "list"):
         """
         Returns the timeseries related to the monitoringnetwork in a uuid list or df format
         
@@ -388,7 +388,7 @@ class Monitoringnetwork:
 
         return results
 
-    def add_timeseries(self, timeseries_uuid_list):
+    def add_timeseries(self, timeseries_uuid_list: list):
         """
         Function to add timeseries to the monitoringnetwork.
         This automatically adds the locations related to the timeseries to the network
@@ -409,7 +409,7 @@ class Monitoringnetwork:
             )
             r.raise_for_status()
 
-    def delete_timeseries(self, timeseries_uuid_list):
+    def delete_timeseries(self, timeseries_uuid_list: list):
         """
         Function to delete timeseries to the monitoringnetwork.
         This automatically deletes the locations related to the timeseries to the network
