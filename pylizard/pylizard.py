@@ -15,7 +15,7 @@ TODO:
 def get_headers(api_key: str):
     """
     Function to create header, based on your Lizard API key
-    
+
     Parameters:
     ----------
     api key : str
@@ -339,7 +339,7 @@ class Monitoringnetwork:
     def get_locations(self, return_format: str = "list"):
         """
         Returns the locations related to the monitoringnetwork in a uuid list or df format
-        
+
         Parameters:
         ----------
         return_format: str
@@ -351,7 +351,7 @@ class Monitoringnetwork:
         Returns:
         -------
             list or df
-        
+
         """
         results = get_monitoringnetwork_enpoint_assets(
             endpoint="locations",
@@ -365,7 +365,7 @@ class Monitoringnetwork:
     def get_timeseries(self, return_format: str = "list"):
         """
         Returns the timeseries related to the monitoringnetwork in a uuid list or df format
-        
+
         Parameters:
         ----------
         return_format: str
@@ -378,7 +378,7 @@ class Monitoringnetwork:
         -------
             list or df
         """
-        
+
         results = get_monitoringnetwork_enpoint_assets(
             endpoint="timeseries",
             return_format=return_format,
@@ -448,7 +448,7 @@ class Groundwaterstation:
     post_params : dict
         The parameters that are required to create a new groundwaterstation.
         These are:
-            organisation, geometry, name, code 
+            organisation, geometry, name, code
         If a new groundwaterstation is created, the id is saved on the self.id
 
     """
@@ -463,14 +463,16 @@ class Groundwaterstation:
             raise TypeError("Please provide either id or post_params. Not both.")
         elif id == None and post_params != None:
             url = f"{LIZARD_BASE_URL}/groundwaterstations/"
-            r = requests.post(url=url, headers=self.headers, data=json.dumps(post_params))
+            r = requests.post(
+                url=url, headers=self.headers, data=json.dumps(post_params)
+            )
             if r.status_code == 400:
                 raise KeyError(r.json())
             elif r.status_code == 201:
-                self.id = r.json()['id']
+                self.id = r.json()["id"]
                 self.url = f"{LIZARD_BASE_URL}/groundwaterstations/{self.id}/"
                 print(f"Groundwaterstation successfully created with id {self.id}")
-    
+
     def get_groundwaterstation_data(self):
         """
         Get the data of the groundwaterstation.
@@ -484,7 +486,7 @@ class Groundwaterstation:
         results = r.json()
 
         return results
-    
+
     def update_groundwaterstation_data(self, patch_params: dict = None):
         """
         Method to update an existing groundwaterstation
@@ -494,13 +496,14 @@ class Groundwaterstation:
         patch_params : dict
             a dict of the parameters that should be updated.
         """
-        r = requests.patch(url=self.url, headers=self.headers, data=json.dumps(patch_params))
+        r = requests.patch(
+            url=self.url, headers=self.headers, data=json.dumps(patch_params)
+        )
 
         if r.status_code == 200:
             print(f"Groundwaterstation {self.id} successfully updated")
         else:
             raise KeyError(r.json())
-
 
     def delete_groundwaterstation(self):
         """
@@ -511,15 +514,15 @@ class Groundwaterstation:
             print(f"Groundwaterstation {self.id} successfully deleted")
         elif r.status_code == 404:
             raise KeyError(r.json())
-        
-    def get_related_location(self, return_format: str = 'uuid'):
+
+    def get_related_location(self, return_format: str = "uuid"):
         """
         This method searches the location related to the groundwaterstation
 
         Parameters:
         -----------
         return_format : str
-            options: 
+            options:
                 - 'uuid' (default): only returns the uuid of the location
 
                 - 'json': returns the full data in json format of the found location
@@ -528,27 +531,30 @@ class Groundwaterstation:
         Returns:
         --------
         string (when return_format = 'uuid')
-        
+
         dict (when return_format = 'json')
         """
         url = f"{LIZARD_BASE_URL}/locations/?object__id={self.id}&object__type=groundwaterstation"
         r = requests.get(url=url, headers=self.headers)
-        count = r.json()['count']
+        count = r.json()["count"]
 
         if count == 0:
             print(f"No locations found for groundwaterstation id {self.id}")
             return
         elif count > 1:
-            print("Unexpected result: More than 1 locations are found. If that is possible, this code should be updated")
+            print(
+                "Unexpected result: More than 1 locations are found. If that is possible, this code should be updated"
+            )
             return
         elif count == 1:
-            if return_format == 'uuid':
-                uuid = r.json()['results'][0]['uuid']
+            if return_format == "uuid":
+                uuid = r.json()["results"][0]["uuid"]
                 return uuid
-            if return_format == 'json':
-                location_json = r.json()['results'][0]
+            if return_format == "json":
+                location_json = r.json()["results"][0]
                 return location_json
-            
+
+
 class Pumpstation:
     """
     Class for working with pumpstations.
@@ -564,9 +570,9 @@ class Pumpstation:
         The pumpstation id. This should be provided if the pumpstation exists allready.
     post_params : dict
         The parameters that are required to create a new pumpstation.
-        
+
         These are:
-            organisation, geometry, name, code 
+            organisation, geometry, name, code
         If a new pumpstation is created, the id is saved on the self.id
 
     """
@@ -581,14 +587,16 @@ class Pumpstation:
             raise TypeError("Please provide either id or post_params. Not both.")
         elif id == None and post_params != None:
             url = f"{LIZARD_BASE_URL}/pumpstations/"
-            r = requests.post(url=url, headers=self.headers, data=json.dumps(post_params))
+            r = requests.post(
+                url=url, headers=self.headers, data=json.dumps(post_params)
+            )
             if r.status_code == 400:
                 raise KeyError(r.json())
             elif r.status_code == 201:
-                self.id = r.json()['id']
+                self.id = r.json()["id"]
                 self.url = f"{LIZARD_BASE_URL}/pumpstations/{self.id}/"
                 print(f"Pumpstation successfully created with id {self.id}")
-    
+
     def get_pumpstation_data(self):
         """
         Get the data of the pumpstation.
@@ -602,7 +610,7 @@ class Pumpstation:
         results = r.json()
 
         return results
-    
+
     def update_pumpstation_data(self, patch_params: dict = None):
         """
         Method to update an existing pumpstation
@@ -612,7 +620,9 @@ class Pumpstation:
         patch_params : dict
             a dict of the parameters that should be updated.
         """
-        r = requests.patch(url=self.url, headers=self.headers, data=json.dumps(patch_params))
+        r = requests.patch(
+            url=self.url, headers=self.headers, data=json.dumps(patch_params)
+        )
         print(self.url)
         if r.status_code == 200:
             print(f"Pumpstation {self.id} successfully updated")
@@ -628,15 +638,15 @@ class Pumpstation:
             print(f"Pumpstation {self.id} successfully deleted")
         elif r.status_code == 404:
             raise KeyError(r.json())
-    
-    def get_related_location(self, return_format: str = 'uuid'):
+
+    def get_related_location(self, return_format: str = "uuid"):
         """
         This method searches the location related to the pumpstation
 
         Parameters:
         -----------
         return_format : str
-            options: 
+            options:
                 - 'uuid' (default): only returns the uuid of the location
 
                 - 'json': returns the full data in json format of the found location
@@ -645,28 +655,28 @@ class Pumpstation:
         Returns:
         --------
         list[str] (when return_format = 'uuid')
-        
+
         list[dict] (when return_format = 'json')
         """
         url = f"{LIZARD_BASE_URL}/locations/?object__id={self.id}&object__type=pumpstation&limit=1000"
         r = requests.get(url=url, headers=self.headers)
-        count = r.json()['count']
+        count = r.json()["count"]
 
         if count == 0:
             print(f"No locations found for pumpstation id {self.id}")
             return
-        
+
         elif count != 0:
             uuid_list = []
             json_list = []
-            
-            for location in r.json()['results']:
-                if return_format == 'uuid':
-                    uuid_list.append(location['uuid'])
-                if return_format == 'json':
+
+            for location in r.json()["results"]:
+                if return_format == "uuid":
+                    uuid_list.append(location["uuid"])
+                if return_format == "json":
                     json_list.append(location)
 
-            if return_format == 'uuid':
+            if return_format == "uuid":
                 return uuid_list
-            elif return_format == 'json':
+            elif return_format == "json":
                 return json_list
