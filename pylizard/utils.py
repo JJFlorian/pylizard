@@ -4,7 +4,7 @@ from .config import *
 
 
 def get_organisation_endpoint_assets(
-    endpoint, dataformat, organisation_uuid, json_field, headers
+    endpoint, return_format, organisation_uuid, json_field, headers
 ):
     """
     Function that handles the Organisation class get methods.
@@ -21,23 +21,23 @@ def get_organisation_endpoint_assets(
         r = requests.get(url=next_url, headers=headers)
         results = r.json()["results"]
 
-        if dataformat == "list":
+        if return_format == "list":
             for result in results:
                 uuid_list.append(result[json_field])
-        elif dataformat == "df":
+        elif return_format == "df":
             for result in results:
                 df_list.append(result)
 
         next_url = r.json()["next"]
 
-    if dataformat == "list":
+    if return_format == "list":
         return uuid_list
-    elif dataformat == "df":
+    elif return_format == "df":
         df = pd.DataFrame(df_list)
         return df
 
 
-def get_monitoringnetwork_enpoint_assets(endpoint, dataformat, url, headers):
+def get_monitoringnetwork_enpoint_assets(endpoint, return_format, url, headers):
     """
     Function that handles the monitoringnetwork class get methods.
     """
@@ -49,17 +49,17 @@ def get_monitoringnetwork_enpoint_assets(endpoint, dataformat, url, headers):
         r = requests.get(next_url, headers=headers)
         results = r.json()["results"]
 
-        if dataformat == "list":
+        if return_format == "list":
             for result in results:
                 uuid_list.append(result["uuid"])
-        elif dataformat == "df":
+        elif return_format == "df":
             for result in results:
                 df_list.append(result)
 
         next_url = r.json()["next"]
 
-    if dataformat == "list":
+    if return_format == "list":
         return uuid_list
-    elif dataformat == "df":
+    elif return_format == "df":
         df = pd.DataFrame(df_list)
         return df
