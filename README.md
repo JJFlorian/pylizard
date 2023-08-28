@@ -18,5 +18,5 @@ Import the package as:
 
 Now all the functions and classes can be used. For example:
 
-    $ headers = liz.get_headers('YOUR_API_KEY')
-    $ organisation = liz.Organisation(name='YOUR_ORGANISATION_NAME')
+    headers = liz.get_headers('YOUR_API_KEY')
+    organisation = liz.Organisation(name='YOUR_ORGANISATION_NAME')
