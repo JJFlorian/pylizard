@@ -20,3 +20,4 @@ Now all the functions and classes can be used. For example:
 
     headers = liz.get_headers('YOUR_API_KEY')
     organisation = liz.Organisation(name='YOUR_ORGANISATION_NAME')
+    organisation_stats = organisation.get_stats()
