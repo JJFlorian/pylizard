@@ -1173,3 +1173,4 @@ class Timeserie:
     #get_events
     #get_percentiles
     #add_events
+    #delete_events
