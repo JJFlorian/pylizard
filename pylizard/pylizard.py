@@ -6,7 +6,7 @@ from .utils import *
 
 """
 TODO: 
-    - locations
+    - filters
     - timeseries
 """
 
@@ -565,7 +565,44 @@ class Groundwaterstation:
             if return_format == "json":
                 location_json = r.json()["results"][0]
                 return location_json
+            
+    def get_related_filters(self, return_format: str = "uuid"):
+        """
+        This method searches the filters related to the groundwaterstation
 
+        Parameters:
+        -----------
+        return_format : str
+            options:
+                - 'uuid' (default): returns a list of filter ids
+
+                - 'json': returns a list of the filter json data
+
+
+        Returns:
+        --------
+        string (when return_format = 'uuid')
+
+        dict (when return_format = 'json')
+        """
+        filters = self.get_groundwaterstation_data()['filters']
+        
+        id_list = []
+        json_list = []
+
+        if len(filters) == 0:
+            print(f"No filters found for groundwaterstation id {self.id}")
+            return
+        else:
+            for filter in filters:
+                if return_format == "uuid":
+                    id_list.append(filter['id'])
+                if return_format == "json":
+                    json_list.append(filter)
+            if return_format == "uuid":
+                return id_list
+            if return_format == "json":
+                return json_list       
 
 class Pumpstation:
     """
