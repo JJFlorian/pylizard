@@ -566,7 +566,7 @@ class Groundwaterstation:
                 location_json = r.json()["results"][0]
                 return location_json
             
-    def get_related_filters(self, return_format: str = "uuid"):
+    def get_related_filters(self, return_format: str = "id"):
         """
         This method searches the filters related to the groundwaterstation
 
@@ -574,16 +574,16 @@ class Groundwaterstation:
         -----------
         return_format : str
             options:
-                - 'uuid' (default): returns a list of filter ids
+                - 'id' (default): returns a list of filter ids
 
                 - 'json': returns a list of the filter json data
 
 
         Returns:
         --------
-        string (when return_format = 'uuid')
+        list[str] (when return_format = 'id')
 
-        dict (when return_format = 'json')
+        list[dict] (when return_format = 'json')
         """
         filters = self.get_groundwaterstation_data()['filters']
         
@@ -602,7 +602,41 @@ class Groundwaterstation:
             if return_format == "uuid":
                 return id_list
             if return_format == "json":
-                return json_list       
+                return json_list     
+
+    def get_related_filter_timeseries(self):
+        """
+        This method searches the timeseries related to the groundwaterstation via the filters
+
+        Parameters:
+        -----------
+        return_format : str
+            options:
+                - 'uuid' (default): returns a list of filter ids
+
+                - 'json': returns a list of the filter json data
+
+
+        Returns:
+        --------
+        list[str] (when return_format = 'id')
+
+        list[dict] (when return_format = 'json')
+        """
+        filters = self.get_groundwaterstation_data()['filters']
+        
+        url_list = []
+
+        if len(filters) == 0:
+            print(f"No filters, and thus timeseries, were found for groundwaterstation id {self.id}")
+            return
+        else:
+            for filter in filters:
+                if filter['timeseries']:
+                    for timeserie in filter['timeseries']:
+                        url_list.append(timeserie)
+
+        return url_list
 
 class Pumpstation:
     """
