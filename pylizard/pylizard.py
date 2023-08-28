@@ -568,22 +568,11 @@ class Groundwaterstation:
             
     def get_related_filters(self, return_format: str = "id"):
         """
-        This method searches the filters related to the groundwaterstation
-
-        Parameters:
-        -----------
-        return_format : str
-            options:
-                - 'id' (default): returns a list of filter ids
-
-                - 'json': returns a list of the filter json data
-
+        This method searches the filters related to the groundwaterstation. Returns a list of urls
 
         Returns:
         --------
-        list[str] (when return_format = 'id')
-
-        list[dict] (when return_format = 'json')
+        list[str]
         """
         filters = self.get_groundwaterstation_data()['filters']
         
@@ -595,11 +584,11 @@ class Groundwaterstation:
             return
         else:
             for filter in filters:
-                if return_format == "uuid":
+                if return_format == "id":
                     id_list.append(filter['id'])
                 if return_format == "json":
                     json_list.append(filter)
-            if return_format == "uuid":
+            if return_format == "id":
                 return id_list
             if return_format == "json":
                 return json_list     
