@@ -1182,6 +1182,7 @@ class Timeserie:
             elif return_format == 'df':
                 df = pd.DataFrame(results)
                 return df
+            
     def get_events(self, return_format: str = "json", time_range: str = None, extra_parameters: str = None):
         """
         This method gets the events data of the timeserie, based on the provided parameters
@@ -1310,6 +1311,38 @@ class Timeserie:
             r = requests.delete(url=lizard_upload_url, headers=self.headers, data=payload)
             r.raise_for_status()
 
-    # - timeseries
-    #     TOEVOEGEN:
-    #         get_percentiles
+    
+    def get_percentiles(self, percentiles: str = None, start: str = None, end: str = None):
+        """
+        Get the provided percentiles of the timeseries.
+
+        Parameters:
+        -----------
+    
+        percentiles : str
+            comma seperated percentiles (e.g: '25,50,75')
+        
+        start : str
+            Datetime as an ISO 8601 string
+        
+        end : str
+            Datetime as an ISO 8601 string.
+       
+        Returns:
+        --------
+        list[lists]
+        """
+    
+        if percentiles == None:
+            raise KeyError("Please provide the percentiles")
+        else:
+            url = f"{self.url}percentiles/?percentiles={percentiles}"
+            if start != None:
+                url = f"{url}&start={start}"
+            if end != None:
+                url = f"{url}&end={end}"
+
+            r = requests.get(url=url, headers=self.headers)
+            results = r.json()['results']
+
+            return results
