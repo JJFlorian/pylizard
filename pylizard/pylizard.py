@@ -8,8 +8,7 @@ from .utils import *
 TODO: 
     - als asset/location/timeserie wordt geinitieerd -> meteen een get_data() uitvoeren en de 
             resultaten als self opslaan. 
-    - filters (als via GW stations niet genoeg is)
-    - timeseries
+
 """
 
 
@@ -127,6 +126,7 @@ class Organisation:
         ----------
         return_format: str
             options:
+
                 -'list' (default): returns list of uuids
 
                 -'df': returns df of all data
@@ -153,6 +153,7 @@ class Organisation:
         ----------
         return_format: str
             options:
+
                 -'list' (default): returns list of ids
 
                 -'df': returns df of all data
@@ -179,6 +180,7 @@ class Organisation:
         ----------
         return_format: str
             options:
+
                 -'list' (default): returns list of ids
 
                 -'df': returns df of all data
@@ -205,6 +207,7 @@ class Organisation:
         ----------
         return_format: str
             options:
+
                 -'list' (default): returns list of ids
 
                 -'df': returns df of all data
@@ -231,6 +234,7 @@ class Organisation:
         ----------
         return_format: str
             options:
+
                 -'list' (default): returns list of uuids
 
                 -'df': returns df of all data
@@ -257,6 +261,7 @@ class Organisation:
         ----------
         return_format: str
             options:
+
                 -'list' (default): returns list of uuids
 
                 -'df': returns df of all data
@@ -351,6 +356,7 @@ class Monitoringnetwork:
         ----------
         return_format: str
             options:
+
                 -'list' (default): returns list of uuids
 
                 -'df': returns df of all data
@@ -377,6 +383,7 @@ class Monitoringnetwork:
         ----------
         return_format: str
             options:
+
                 -'list' (default): returns list of uuids
 
                 -'df': returns df of all data
@@ -536,6 +543,7 @@ class Groundwaterstation:
         -----------
         return_format : str
             options:
+
                 - 'uuid' (default): only returns the uuid of the location
 
                 - 'json': returns the full data in json format of the found location
@@ -602,6 +610,7 @@ class Groundwaterstation:
         -----------
         return_format : str
             options:
+
                 - 'uuid' (default): returns a list of filter ids
 
                 - 'json': returns a list of the filter json data
@@ -721,6 +730,7 @@ class Pumpstation:
         -----------
         return_format : str
             options:
+
                 - 'uuid' (default): only returns the uuid of the location
 
                 - 'json': returns the full data in json format of the found location
@@ -873,6 +883,7 @@ class Measuringstation:
         -----------
         return_format : str
             options:
+
                 - 'uuid' (default): only returns the uuid of the location
 
                 - 'json': returns the full data in json format of the found location
@@ -1002,6 +1013,7 @@ class Location:
         -----------
         return_format : str
             options:
+
                 - 'uuid' (default): returns a list of timeseries uuids
 
                 - 'json': returns the full data in json format of the found timeseries
@@ -1130,6 +1142,7 @@ class Timeserie:
         -----------
         return_format : str
             options:
+
                 - 'json' (default): returns the data in json format
 
                 - 'df': returns the data in a pandas DataFrame format
@@ -1168,9 +1181,60 @@ class Timeserie:
             elif return_format == 'df':
                 df = pd.DataFrame(results)
                 return df
+    def get_events(self, return_format: str = "json", time_range: str = None, extra_parameters: str = None):
+        """
+        This method gets the events data of the timeserie, based on the provided parameters
 
-    #TOEVOEGEN:
-    #get_events
-    #get_percentiles
-    #add_events
-    #delete_events
+        Parameters:
+        -----------
+        return_format : str
+        
+            options:
+
+                - 'json' (default): returns the data in json format
+
+                - 'df': returns the data in a pandas DataFrame format
+
+        time_range : str
+
+            start and end date for the events query, separated by a comma.
+            Example format: '2020-04-23T00:00:00Z,2022-04-23T00:00:00Z.
+            Optional: if not provided, all events will be returned.
+
+        extra_parameters : str
+
+            String of the extra query parameters. Example: 'flag__in=5,6,7&value=0.5'
+            Check the documentation on the event page for a random timeserie as example.
+        
+        Returns:
+        --------
+        list[dict] (when return_format = 'json')
+        DataFrame (object): when return_format = 'pd'
+        """
+
+        next_url = f"{self.url}events/?limit=1000"
+        if time_range != None:
+            next_url = f"{next_url}&time__range={time_range}"
+        if extra_parameters != None:
+            next_url = f"{next_url}&{extra_parameters}"
+        
+        event_list = []
+
+        while next_url != None:
+            r = requests.get(url=next_url, headers=self.headers)
+            events = r.json()['results']
+            for event in events:
+                event_list.append(event)
+            next_url= r.json()['next']
+
+        if return_format == 'json':
+            return event_list
+        elif return_format == 'df':
+            df = pd.DataFrame(event_list)
+            return df
+        
+    # - timeseries
+    #     TOEVOEGEN:
+    #         get_percentiles
+    #         add_events
+    #         delete_events
