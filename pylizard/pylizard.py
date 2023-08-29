@@ -1,6 +1,7 @@
 import requests
 import json
 import pandas as pd
+import numpy as np
 from .config import *
 from .utils import *
 
@@ -1232,9 +1233,83 @@ class Timeserie:
         elif return_format == 'df':
             df = pd.DataFrame(event_list)
             return df
+   
+    def add_events(self, data_list: list = None, data_df: pd.DataFrame = None):
+        """
+        Method to add events to the timeserie.
+
+        Parameters:
+        -----------
+        data : list of objects or df
+
+            Lizard accepts JSON or csv as dataformat. 
+            For now PyLizard only supports JSON or a df.
+            PyLizard transforms the df into the required format.
+            When a df is provided, make sure to have a 'time' and 'value' column
+            
+            Example input:
+
+            [
+                {"time": "2020-03-20T01:00:00Z", "value": 3.14},
+                {"time": "2020-03-20T01:05:00Z", "value": 2.72}
+            ]
         
+        """
+        if data_list != None:
+            df = pd.DataFrame(data_list).set_index("time")
+            df = df[~df.index.duplicated(keep='last')].reset_index()
+            df_duplicates_removed = df.replace({np.nan:None}).to_dict('records')
+            lizard_upload_url = f"{self.url}events/"
+            payload = json.dumps(df_duplicates_removed)
+            r = requests.post(url=lizard_upload_url, headers=self.headers, data=payload)
+
+        if not data_df.empty:
+            data_df = data_df.set_index("time")
+            data_df = data_df[~data_df.index.duplicated(keep='last')].reset_index()
+            df_duplicates_removed = data_df.replace({np.nan:None}).to_dict('records')
+            lizard_upload_url = f"{self.url}events/"
+            payload = json.dumps(df_duplicates_removed)
+            r = requests.post(url=lizard_upload_url, headers=self.headers, data=payload)
+            r.raise_for_status()
+
+    def delete_events(self, data_list: list = None, data_df: pd.DataFrame = None):
+        """
+        Method to delete events from the timeserie.
+
+        Parameters:
+        -----------
+        data : list of objects or df
+
+            Lizard accepts JSON or csv as dataformat. 
+            For now PyLizard only supports JSON or a df.
+            PyLizard transforms the df into the required format.
+            When a df is provided, make sure to have a 'time' and 'value' column
+            
+            Example input:
+
+            [
+                {"time": "2020-03-20T01:00:00Z", "value": 3.14},
+                {"time": "2020-03-20T01:05:00Z", "value": 2.72}
+            ]
+        
+        """
+        if data_list != None:
+            df = pd.DataFrame(data_list).set_index("time")
+            df = df[~df.index.duplicated(keep='last')].reset_index()
+            df_duplicates_removed = df.replace({np.nan:None}).to_dict('records')
+            lizard_upload_url = f"{self.url}events/"
+            payload = json.dumps(df_duplicates_removed)
+            r = requests.delete(url=lizard_upload_url, headers=self.headers, data=payload)
+
+        if not data_df.empty:
+            data_df = data_df.set_index("time")
+            data_df = data_df[~data_df.index.duplicated(keep='last')].reset_index()
+            df_duplicates_removed = data_df.replace({np.nan:None}).to_dict('records')
+            lizard_upload_url = f"{self.url}events/"
+            payload = json.dumps(df_duplicates_removed)
+            r = requests.delete(url=lizard_upload_url, headers=self.headers, data=payload)
+            r.raise_for_status()
+
     # - timeseries
     #     TOEVOEGEN:
     #         get_percentiles
-    #         add_events
-    #         delete_events
