@@ -5,13 +5,6 @@ import numpy as np
 from .config import *
 from .utils import *
 
-"""
-TODO: 
-    - als asset/location/timeserie wordt geinitieerd -> meteen een get_data() uitvoeren en de 
-            resultaten als self opslaan. 
-
-"""
-
 
 def get_headers(api_key: str):
     """
@@ -57,24 +50,24 @@ class Organisation:
     def __init__(self, headers: dict = None, name: str = None, uuid: str = None):
         self.headers = headers
 
-        if name == None:
+        if name is None:
             self.uuid = uuid
             self.url = f"{LIZARD_BASE_URL}/organisations/{self.uuid}"
             r = requests.get(self.url, headers=self.headers)
 
             if r.status_code != 200:
-                raise KeyError("No organisation found for provided uuid")
+                raise Exception("No organisation found for provided uuid")
             else:
                 self.name = r.json()["name"]
                 return
-        if uuid == None:
+        if uuid is None:
             self.name = name
             url = f"{LIZARD_BASE_URL}/organisations/?name={self.name}"
             r = requests.get(url, headers=self.headers)
             count = r.json()["count"]
 
             if count == 0:
-                raise KeyError("No organisation found for provided name")
+                raise Exception("No organisation found for provided name")
                 
             else:
                 self.uuid = r.json()["results"][0]["uuid"]
@@ -300,30 +293,29 @@ class Monitoringnetwork:
     def __init__(self, headers: dict = None, name: str = None, uuid: str = None):
         self.headers = headers
 
-        if uuid == None:
+        if uuid is None:
             self.name = name
             url = f"{LIZARD_BASE_URL}/monitoringnetworks/?name={self.name}"
             r = requests.get(url, headers=self.headers)
             count = r.json()["count"]
             if count == 0:
-                raise KeyError("No monitoringnetwork found for provided name")
+                raise Exception("No monitoringnetwork found for provided name")
                 
             if count > 1:
-                raise KeyError("Multiple monitoringnetworks found for provided name")
+                raise Exception("Multiple monitoringnetworks found for provided name")
                 
             else:
                 self.uuid = r.json()["results"][0]["uuid"]
                 self.url = f"{LIZARD_BASE_URL}/monitoringnetworks/{self.uuid}"
 
-        if name == None:
+        if name is None:
             self.uuid = uuid
             self.url = f"{LIZARD_BASE_URL}/monitoringnetworks/{self.uuid}"
 
             r = requests.get(self.url, headers=self.headers)
 
             if r.status_code != 200:
-                raise KeyError("No monitoringnetwork found for provided uuid")
-                return
+                raise Exception("No monitoringnetwork found for provided uuid")
             else:
                 self.name = r.json()["name"]
 
@@ -478,9 +470,9 @@ class Groundwaterstation:
             self.url = f"{LIZARD_BASE_URL}/groundwaterstations/{self.id}/"
             return
         elif id != None and post_params != None:
-            raise KeyError("Please provide either id or post_params. Not both.")
+            raise Exception("Please provide either id or post_params. Not both.")
             
-        elif id == None and post_params != None:
+        elif id is None and post_params != None:
             url = f"{LIZARD_BASE_URL}/groundwaterstations/"
             r = requests.post(
                 url=url, headers=self.headers, data=json.dumps(post_params)
@@ -490,7 +482,7 @@ class Groundwaterstation:
                 self.url = f"{LIZARD_BASE_URL}/groundwaterstations/{self.id}/"
                 print(f"Groundwaterstation successfully created with id {self.id}")
             else:
-                raise KeyError(r.json())
+                raise Exception(r.json())
                 
 
 
@@ -524,7 +516,7 @@ class Groundwaterstation:
         if r.status_code == 200:
             print(f"Groundwaterstation {self.id} successfully updated")
         else:
-            raise KeyError(r.json())
+            raise Exception(r.json())
 
     def delete_groundwaterstation(self):
         """
@@ -534,7 +526,7 @@ class Groundwaterstation:
         if r.status_code == 204:
             print(f"Groundwaterstation {self.id} successfully deleted")
         else:
-            raise KeyError(r.json())
+            raise Exception(r.json())
 
     def get_related_location(self, return_format: str = "uuid"):
         """
@@ -668,8 +660,8 @@ class Pumpstation:
             self.url = f"{LIZARD_BASE_URL}/pumpstations/{self.id}/"
             return
         elif id != None and post_params != None:
-            raise KeyError("Please provide either id or post_params. Not both.")
-        elif id == None and post_params != None:
+            raise Exception("Please provide either id or post_params. Not both.")
+        elif id is None and post_params != None:
             url = f"{LIZARD_BASE_URL}/pumpstations/"
             r = requests.post(
                 url=url, headers=self.headers, data=json.dumps(post_params)
@@ -679,7 +671,7 @@ class Pumpstation:
                 self.url = f"{LIZARD_BASE_URL}/pumpstations/{self.id}/"
                 print(f"Pumpstation successfully created with id {self.id}")
             else:
-                raise KeyError(r.json())
+                raise Exception(r.json())
             
 
     def get_pumpstation_data(self):
@@ -711,7 +703,7 @@ class Pumpstation:
         if r.status_code == 200:
             print(f"Pumpstation {self.id} successfully updated")
         else:
-            raise KeyError(r.json())
+            raise Exception(r.json())
 
     def delete_pumpstation(self):
         """
@@ -721,7 +713,7 @@ class Pumpstation:
         if r.status_code == 204:
             print(f"Pumpstation {self.id} successfully deleted")
         else:
-            raise KeyError(r.json())
+            raise Exception(r.json())
 
     def get_related_location(self, return_format: str = "uuid"):
         """
@@ -821,8 +813,8 @@ class Measuringstation:
             self.url = f"{LIZARD_BASE_URL}/measuringstations/{self.id}/"
             return
         elif id != None and post_params != None:
-            raise KeyError("Please provide either id or post_params. Not both.")
-        elif id == None and post_params != None:
+            raise Exception("Please provide either id or post_params. Not both.")
+        elif id is None and post_params != None:
             url = f"{LIZARD_BASE_URL}/measuringstations/"
             r = requests.post(
                 url=url, headers=self.headers, data=json.dumps(post_params)
@@ -832,7 +824,7 @@ class Measuringstation:
                 self.url = f"{LIZARD_BASE_URL}/measuringstations/{self.id}/"
                 print(f"Measuringstation successfully created with id {self.id}")
             else:
-                raise KeyError(r.json())
+                raise Exception(r.json())
             
 
     def get_measuringstation_data(self):
@@ -864,7 +856,7 @@ class Measuringstation:
         if r.status_code == 200:
             print(f"Measuringstation {self.id} successfully updated")
         else:
-            raise KeyError(r.json())
+            raise Exception(r.json())
 
     def delete_measuringstation(self):
         """
@@ -874,7 +866,7 @@ class Measuringstation:
         if r.status_code == 204:
             print(f"Measuringstation {self.id} successfully deleted")
         else:
-            raise KeyError(r.json())
+            raise Exception(r.json())
 
     def get_related_location(self, return_format: str = "uuid"):
         """
@@ -951,8 +943,8 @@ class Location:
             self.url = f"{LIZARD_BASE_URL}/locations/{self.uuid}/"
             return
         elif uuid != None and post_params != None:
-            raise KeyError("Please provide either uuid or post_params. Not both.")
-        elif uuid == None and post_params != None:
+            raise Exception("Please provide either uuid or post_params. Not both.")
+        elif uuid is None and post_params != None:
             url = f"{LIZARD_BASE_URL}/locations/"
             r = requests.post(
                 url=url, headers=self.headers, data=json.dumps(post_params)
@@ -962,7 +954,7 @@ class Location:
                 self.url = f"{LIZARD_BASE_URL}/locations/{self.uuid}/"
                 print(f"Location successfully created with uuid {self.uuid}")
             else:
-                raise KeyError(r.json())
+                raise Exception(r.json())
 
 
     def get_location_data(self):
@@ -994,7 +986,7 @@ class Location:
         if r.status_code == 200:
             print(f"Location {self.uuid} successfully updated")
         else:
-            raise KeyError(r.json())
+            raise Exception(r.json())
 
     def delete_location(self):
         """
@@ -1004,7 +996,7 @@ class Location:
         if r.status_code == 204:
             print(f"Location {self.uuid} successfully deleted")
         else:
-            raise KeyError(r.json())
+            raise Exception(r.json())
 
     def get_related_timeseries(self, return_format: str = "uuid"):
         """
@@ -1080,8 +1072,8 @@ class Timeserie:
             self.url = f"{LIZARD_BASE_URL}/timeseries/{self.uuid}/"
             return
         elif uuid != None and post_params != None:
-            raise KeyError("Please provide either uuid or post_params. Not both.")
-        elif uuid == None and post_params != None:
+            raise Exception("Please provide either uuid or post_params. Not both.")
+        elif uuid is None and post_params != None:
             url = f"{LIZARD_BASE_URL}/timeseries/"
             r = requests.post(
                 url=url, headers=self.headers, data=json.dumps(post_params)
@@ -1091,7 +1083,7 @@ class Timeserie:
                 self.url = f"{LIZARD_BASE_URL}/timeseries/{self.uuid}/"
                 print(f"Timeserie successfully created with uuid {self.uuid}")
             else:
-                raise KeyError(r.json())
+                raise Exception(r.json())
 
 
     def get_timeserie_data(self):
@@ -1123,7 +1115,7 @@ class Timeserie:
         if r.status_code == 200:
             print(f"Timeserie {self.uuid} successfully updated")
         else:
-            raise KeyError(r.json())
+            raise Exception(r.json())
 
     def delete_timeserie(self):
         """
@@ -1133,7 +1125,7 @@ class Timeserie:
         if r.status_code == 204:
             print(f"Timeserie {self.uuid} successfully deleted")
         else:
-            raise KeyError(r.json())
+            raise Exception(r.json())
 
     def get_aggregated_data(self, return_format: str = "json", fields: str = None, start: str = None, end: str = None, window: str = None):
         """
@@ -1170,8 +1162,8 @@ class Timeserie:
         DataFrame (object): when return_format = 'pd'
         """
     
-        if fields == None or start == None or end == None or window == None:
-            raise KeyError("Not all parameters are provided!")
+        if fields is None or start is None or end is None or window is None:
+            raise Exception("Not all parameters are provided!")
         else:
             url = f"{self.url}aggregates/?fields={fields}&start={start}&end={end}&window={window}"
             r = requests.get(url=url, headers=self.headers)
@@ -1333,8 +1325,8 @@ class Timeserie:
         list[lists]
         """
     
-        if percentiles == None:
-            raise KeyError("Please provide the percentiles")
+        if percentiles is None:
+            raise Exception("Please provide the percentiles")
         else:
             url = f"{self.url}percentiles/?percentiles={percentiles}"
             if start != None:
